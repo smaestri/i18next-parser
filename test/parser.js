@@ -517,4 +517,30 @@ describe('parser', function () {
         });
         i18nextParser.end(fakeFile);
     });
+
+	it('parses literal', function (done) {
+		var result;
+		var i18nextParser = Parser();
+
+		var fakeFile = new File({
+			contents: new Buffer("const myPrefix='prefixValue' {t(`${myPrefix}_NAME-LABEL`, { defaultValue: 'Names' })}")
+		});
+
+		i18nextParser.on('data', function (file) {
+			if ( file.relative === 'en/translation.json' ) {
+
+				result = JSON.parse( file.contents );
+				console.log('result')
+				console.log(result )
+			}
+		});
+		i18nextParser.on('end', function (file) {
+			// assert.deepEqual( result, { myPrefixNAMELABEL: 'titi', second: 'tata' } );
+			console.log('end result')
+			console.log(result )
+			done();
+		});
+
+		i18nextParser.end(fakeFile);
+	});
 });
